@@ -36,9 +36,9 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'An unexpected internal server error occurred.' });
 });
 
-// Start the HTTP server
-const server = app.listen(PORT, () => {
-  console.log(`Hotel Reservation server running at http://localhost:${PORT}`);
+// Start the HTTP server (bind to 0.0.0.0 for cloud hosting compatibility)
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Hotel Reservation server running at http://0.0.0.0:${PORT}`);
 });
 
 // Export app and server for modular testing

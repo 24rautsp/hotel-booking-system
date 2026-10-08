@@ -117,6 +117,29 @@ This script tests all 10 edge cases against the running server, logs **PASS/FAIL
 
 ---
 
+## ☁️ Deployment on Render
+
+This application is ready for zero-config deployment on [Render](https://render.com):
+
+1. **Sign in to Render**: Connect your GitHub account at [dashboard.render.com](https://dashboard.render.com).
+2. **Create a New Web Service**: Click **New +** $\rightarrow$ **Web Service**.
+3. **Select Repository**: Select `24rautsp/hotel-booking-system`.
+4. **Configuration Settings**:
+   * **Name**: `hotel-booking-system`
+   * **Region**: Choose the closest region (e.g., Singapore, Frankfurt, Oregon)
+   * **Branch**: `main`
+   * **Runtime**: `Node`
+   * **Build Command**: `npm install`
+   * **Start Command**: `npm start`
+   * **Instance Type**: **Free**
+5. **Click "Deploy Web Service"**.
+
+> [!WARNING]
+> **Important Note on SQLite on Free Cloud Hosting (Ephemeral Storage)**:  
+> Render Free instances use **ephemeral disks**. When the server spins down due to 15 minutes of inactivity or redeploys, SQLite files are reset. For this college project, the app automatically initializes 3 default starter rooms (`101`, `102`, `201`) whenever the database is created, ensuring the demo is always immediately playable. For permanent long-term production storage, you can attach a Render Persistent Disk or connect a hosted PostgreSQL database.
+
+---
+
 ## 📡 API Endpoints Reference
 
 All API routes communicate using JSON and standard HTTP status codes.

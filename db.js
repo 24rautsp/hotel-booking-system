@@ -35,5 +35,17 @@ const schema = `
 // Execute the schema script to create the tables
 db.exec(schema);
 
+// Seed default starter rooms if the database is newly initialized
+const roomCount = db.prepare('SELECT COUNT(*) AS count FROM rooms').get().count;
+if (roomCount === 0) {
+  const seedRooms = db.prepare(`
+    INSERT INTO rooms (room_no, type, price) VALUES 
+    ('101', 'Single', 100.00),
+    ('102', 'Deluxe', 150.00),
+    ('201', 'Suite', 250.00)
+  `);
+  seedRooms.run();
+}
+
 // Export the database instance for use in API route files
 module.exports = db;
