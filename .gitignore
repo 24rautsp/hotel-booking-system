@@ -1,0 +1,8 @@
+# Ignore downloaded third-party libraries
+node_modules/
+
+# Ignore SQLite database files and WAL logs generated at runtime
+*.db
+*.db-journal
+*.db-wal
+*.db-shm

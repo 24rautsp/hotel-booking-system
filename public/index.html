@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel Room Booking System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Toast Notification Container for alerts -->
+  <div id="toast-container" aria-live="polite"></div>
+
+  <!-- 1. Header Section -->
+  <header class="app-header">
+    <div class="header-content">
+      <div class="brand">
+        <span class="brand-icon">🏨</span>
+        <div>
+          <h1>Hotel Room Booking System</h1>
+          <p class="subtitle">Full-Stack Room & Reservation Management</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-layout">
+    <!-- Left Column: Forms -->
+    <div class="forms-column">
+      
+      <!-- 2. Add Room Form Card -->
+      <section class="card">
+        <div class="card-header">
+          <h2>➕ Add New Room</h2>
+        </div>
+        <form id="add-room-form" class="form-grid">
+          <div class="form-group">
+            <label for="room-no">Room No</label>
+            <input type="text" id="room-no" name="room_no" placeholder="e.g. 101, 204B" maxlength="20" required>
+          </div>
+
+          <div class="form-group">
+            <label for="room-type">Room Type</label>
+            <select id="room-type" name="type" required>
+              <option value="" disabled selected>Select room type</option>
+              <option value="Single">Single</option>
+              <option value="Double">Double</option>
+              <option value="Deluxe">Deluxe</option>
+              <option value="Suite">Suite</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="room-price">Price ($ / night)</label>
+            <input type="number" id="room-price" name="price" min="1" max="100000" step="0.01" placeholder="e.g. 120.00" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Add Room</button>
+        </form>
+      </section>
+
+      <!-- 5. Book a Room Form Card -->
+      <section class="card">
+        <div class="card-header">
+          <h2>📅 Book a Room</h2>
+        </div>
+        <form id="book-room-form" class="form-grid">
+          <div class="form-group">
+            <label for="book-room-id">Select Room</label>
+            <select id="book-room-id" name="room_id" required>
+              <option value="" disabled selected>Loading rooms...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="book-guest-name">Guest Name</label>
+            <input type="text" id="book-guest-name" name="guest_name" placeholder="e.g. John Doe" maxlength="100" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="book-check-in">Check-in Date</label>
+              <input type="date" id="book-check-in" name="check_in" required>
+            </div>
+
+            <div class="form-group">
+              <label for="book-check-out">Check-out Date</label>
+              <input type="date" id="book-check-out" name="check_out" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-success">Confirm Booking</button>
+        </form>
+      </section>
+
+    </div>
+
+    <!-- Right Column: Search & Tables -->
+    <div class="tables-column">
+      
+      <!-- 3. Search Form Card -->
+      <section class="card">
+        <div class="card-header">
+          <h2>🔍 Search Available Rooms</h2>
+        </div>
+        <form id="search-rooms-form" class="search-bar">
+          <div class="form-group">
+            <label for="search-type">Room Type</label>
+            <select id="search-type" name="type">
+              <option value="">All Types</option>
+              <option value="Single">Single</option>
+              <option value="Double">Double</option>
+              <option value="Deluxe">Deluxe</option>
+              <option value="Suite">Suite</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="search-check-in">Check-in Date</label>
+            <input type="date" id="search-check-in" name="check_in" required>
+          </div>
+
+          <div class="form-group">
+            <label for="search-check-out">Check-out Date</label>
+            <input type="date" id="search-check-out" name="check_out" required>
+          </div>
+
+          <div class="search-actions">
+            <button type="submit" class="btn btn-search">Search</button>
+            <button type="button" id="btn-show-all" class="btn btn-secondary">Show All</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 4. Rooms Table Card -->
+      <section class="card">
+        <div class="card-header flex-between">
+          <h2>🛏️ Rooms List</h2>
+          <span id="rooms-count" class="badge-count">0 Rooms</span>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table" id="rooms-table">
+            <thead>
+              <tr>
+                <th>Room No</th>
+                <th>Type</th>
+                <th>Price / Night</th>
+                <th>Status (Today)</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="rooms-tbody">
+              <!-- Dynamically populated via fetch() -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 6. Bookings Table Card -->
+      <section class="card">
+        <div class="card-header flex-between">
+          <h2>📋 Active Reservations</h2>
+          <span id="bookings-count" class="badge-count">0 Bookings</span>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table" id="bookings-table">
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Room</th>
+                <th>Type</th>
+                <th>Guest Name</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Nights</th>
+                <th>Total</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="bookings-tbody">
+              <!-- Dynamically populated via fetch() -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Edit Room Modal Dialog -->
+  <div id="edit-room-modal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-labelledby="edit-modal-title">
+      <div class="modal-header">
+        <h2 id="edit-modal-title">✏️ Edit Room</h2>
+        <button type="button" class="btn-close" id="btn-close-edit-modal" aria-label="Close">&times;</button>
+      </div>
+      <form id="edit-room-form" class="form-grid">
+        <input type="hidden" id="edit-room-id">
+        
+        <div class="form-group">
+          <label for="edit-room-no">Room No</label>
+          <input type="text" id="edit-room-no" name="room_no" maxlength="20" required>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-room-type">Room Type</label>
+          <select id="edit-room-type" name="type" required>
+            <option value="Single">Single</option>
+            <option value="Double">Double</option>
+            <option value="Deluxe">Deluxe</option>
+            <option value="Suite">Suite</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-room-price">Price ($ / night)</label>
+          <input type="number" id="edit-room-price" name="price" min="1" max="100000" step="0.01" required>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-edit">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <p>Hotel Room Booking System &bull; College Full-Stack Web Development Project</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
